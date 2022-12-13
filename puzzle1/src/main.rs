@@ -1,6 +1,11 @@
 use std::io::prelude::*;
 
 fn main() {
+    part1();
+    part2();
+}
+
+fn part1() {
     let br = common::get_inputfilereader();
 
     let mut elf = 1;
@@ -30,4 +35,28 @@ fn main() {
 
     println!("Elf {} carrying {} calories", max_elf, max_tot);
 
+}
+
+fn part2() {
+    let br = common::get_inputfilereader();
+
+    let mut calories: Vec<i32> = std::vec::Vec::new();
+    let mut total = 0;
+
+    for line in br.lines() {
+        let l = line.unwrap();
+        if l.is_empty() {
+            calories.push(total);
+            total = 0;
+        } else {
+            total = total + l.parse::<i32>().unwrap();
+        }
+    }
+
+    calories.push(total);
+    calories.sort();
+
+    let len = calories.len();
+    
+    println!("Total cals from top 3 elves = {}", calories[len-1] + calories[len-2] + calories[len-3]);
 }
