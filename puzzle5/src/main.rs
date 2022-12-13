@@ -12,8 +12,18 @@ fn main() {
         println!("{}", s);
     }
 
-    move_stacks(&mut br, &mut stacks);
+    move_stacks_part1(&mut br, &mut stacks);
+    get_stack_tops(&mut stacks);
 
+    let mut br = common::get_inputfilereader();
+    let mut stacks = get_stacks(&mut br);
+
+    move_stacks_part2(&mut br, &mut stacks);
+    get_stack_tops(&mut stacks);
+}
+
+fn get_stack_tops(stacks: &mut Vec<Vec<char>>)
+{
     let mut output = String::new();
     for mut stack in stacks {
         let c = stack.pop().unwrap();
@@ -63,7 +73,7 @@ fn get_stacks(br: &mut BufReader<File>) -> Vec<Vec<char>>
     stacks
 }
 
-fn move_stacks(br: &mut BufReader<File>, stacks: &mut Vec<Vec<char>>) {
+fn move_stacks_part1(br: &mut BufReader<File>, stacks: &mut Vec<Vec<char>>) {
     for line in br.lines() {
         // Instruction is "move <count> from <src> to <dest>"
         let l = line.unwrap();
@@ -77,5 +87,25 @@ fn move_stacks(br: &mut BufReader<File>, stacks: &mut Vec<Vec<char>>) {
             let c = stacks[src-1].pop().unwrap();
             stacks[dest-1].push(c);
         }
+    }
+}
+
+fn move_stacks_part2(br: &mut BufReader<File>, stacks: &mut Vec<Vec<char>>) {
+    for line in br.lines() {
+        // Instruction is "move <count> from <src> to <dest>"
+        let l = line.unwrap();
+        let parts: Vec<&str> = l.split(' ').collect();
+
+        let count: usize = parts[1].parse::<usize>().unwrap();
+        let src: usize = parts[3].parse::<usize>().unwrap();
+        let dest: usize = parts[5].parse::<usize>().unwrap();
+
+        let mut movements = Vec::new();
+        for _i in 0..count {
+            let c = stacks[src-1].pop().unwrap();
+            movements.push(c);
+        }
+        movements.reverse();
+        stacks[dest-1].append(&mut movements);
     }
 }
