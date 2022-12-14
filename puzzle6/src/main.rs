@@ -13,32 +13,22 @@ fn main() {
     println!("Message position = {}", message_pos);
 }
 
-fn get_unique_posn(line: &str, buflen: usize) -> i32
+fn get_unique_posn(line: &str, buflen: usize) -> usize
 {
-    let mut buf: Vec<char> = std::vec::Vec::new();
+    let mut buf: Vec<char> = vec!['*'; buflen];
     let mut cnt = 0;
 
     for c in line.chars() {
-        cnt += 1;
-        append_buf(&mut buf, c, buflen);
+        buf[cnt%buflen] = c;
 
-        if buf.len() == buflen {
-            if !contains_dupe(&buf) {
-                break;
-            }
+        cnt += 1;
+    
+        if cnt >= buflen && !contains_dupe(&buf) {
+            break;
         }
     }
 
     cnt
-}
-
-fn append_buf(buf: &mut Vec<char>, c: char, maxsize: usize)
-{
-    if buf.len() == maxsize {
-        buf.remove(0);
-    }
-
-    buf.push(c);
 }
 
 fn contains_dupe(buf:&Vec<char>) -> bool
